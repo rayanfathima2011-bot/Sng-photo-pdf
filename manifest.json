@@ -1,0 +1,19 @@
+{
+  "name": "போட்டோ ⇄ AES-256 பாதுகாப்பான PDF",
+  "short_name": "PDF Lock HD",
+  "description": "போட்டோக்களை HD தரத்தில் AES-256 பாஸ்வேர்ட் PDF ஆக மாற்றவும், திரும்பப் பிரித்தெடுக்கவும் உதவும் ஆஃப்லைன் செயலி.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#064e3b",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
