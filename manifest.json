@@ -1,19 +1,23 @@
 {
- "name": "SNG Photo to PDF Encrypt",
-"short_name": "SNG Photo PDF",
-  "description": "போட்டோக்களை HD தரத்தில் AES-256 பாஸ்வேர்ட் PDF ஆக மாற்றவும், திரும்பப் பிரித்தெடுக்கவும் உதவும் ஆஃப்லைன் செயலி.",
-  "start_url": "./",
-  "scope": "./",
+  "name": "SNG Photo to PDF Encrypt",
+  "short_name": "SNG Photo PDF",
+  "start_url": "/Sng-photo-pdf/",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#f8fafc",
+  "background_color": "#064e3b",
   "theme_color": "#064e3b",
+  "description": "போட்டோக்களை HD தரத்தில் AES-256 பாஸ்வேர்ட் PDF ஆக மாற்றவும், திரும்பப் பிரித்தெடுக்கவும் உதவும் ஆஃப்லைன் செயலி.",
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
