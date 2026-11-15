@@ -1,177 +1,1180 @@
 <!DOCTYPE html>
-<html lang="ta" dir="ltr">
+<html lang="ta">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sng photo to pdf encrypt</title>
-  <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="#064e3b">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#064e3b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <title>போட்டோ ⇄ AES-256 பாதுகாப்பான PDF (HD)</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
   <style>
-    :root {
-      --primary: #064e3b;
-      --primary-hover: #022c22;
-      --bg: #f0fdf4;
-      --card-bg: #ffffff;
-      --text: #1f2937;
-      --text-light: #4b5563;
-      --border: #d1d5db;
-      --accent: #10b981;
-    }
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      margin: 0;
-      padding: 0;
+      font-family: 'Inter', 'Noto Sans Tamil', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
-    header {
-      background-color: var(--primary);
-      color: white;
-      padding: 1.5rem 1rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    .tap-target {
+      min-height: 44px;
     }
-    .header-content {
-      max-width: 800px;
-      margin: 0 auto;
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    h1 {
-      font-size: 1.5rem;
-      margin: 0 0 0.5rem 0;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .subtitle {
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
-    main {
-      max-width: 800px;
-      margin: 1.5rem auto;
-      padding: 0 1rem;
-    }
-    .card {
-      background: var(--card-bg);
-      border-radius: 0.75rem;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    h2 {
-      font-size: 1.2rem;
-      color: var(--primary);
-      margin-top: 0;
-      border-bottom: 2px solid var(--bg);
-      padding-bottom: 0.5rem;
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      margin-bottom: 0.3rem;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-    input[type="text"], input[type="password"], select {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-    button {
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 600;
-      margin-top: 1rem;
-    }
-    button:hover {
-      background-color: var(--primary-hover);
-    }
-    .info-box {
-      background: #e6fffa;
-      border-left: 4px solid var(--accent);
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      border-radius: 0 0.5rem 0.5rem 0;
-      font-size: 0.9rem;
+    .animate-fade-slide {
+      animation: fadeSlide 0.2s ease-out;
     }
   </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
 
-  <header>
-    <div class="header-content">
-      <h1>🔒 sng photo to pdf encrypt</h1>
-      <div class="subtitle">HD தரம் • சர்வர் அப்லோட் இல்லை • AES-256</div>
+  <!-- Top Header -->
+  <header class="bg-emerald-900 text-white shadow-md sticky top-0 z-30">
+    <div class="max-w-3xl mx-auto px-3 sm:px-4 py-3 flex flex-wrap items-center justify-between gap-2.5">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-9 h-9 rounded-xl bg-emerald-700 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-emerald-100" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <h1 class="text-sm sm:text-lg font-bold truncate">போட்டோ ⇄ AES-256 PDF (HD)</h1>
+          <p class="text-[11px] sm:text-xs text-emerald-200 truncate">HD தரம் &bull; சர்வர் அப்லோட் இல்லை &bull; AES-256</p>
+        </div>
+      </div>
+      <nav class="flex bg-emerald-950/60 p-1 rounded-xl shrink-0">
+        <button id="tabBtnApp" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold bg-white text-emerald-900 transition">
+          PDF உருவாக்கு
+        </button>
+        <button id="tabBtnExtract" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-emerald-100 hover:text-white transition">
+          போட்டோ எடு
+        </button>
+        <button id="tabBtnGuide" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-emerald-100 hover:text-white transition">
+          வழிமுறைகள்
+        </button>
+      </nav>
     </div>
   </header>
 
-  <main>
-    <div class="info-box">
-      <strong>அசல் HD தரம் & AES-256 பாதுகாப்பு:</strong> உங்கள் போட்டோக்கள் தரம் குறையாமல் முழு HD தெளிவில், பிரவுசருக்குள்ளேயே QPDF WebAssembly மூலம் <strong>256-bit AES</strong> என்கிரிப்ஷன் செய்யப்படும்.
-    </div>
+  <!-- Toast Notification -->
+  <div id="toastContainer" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-md pointer-events-none"></div>
 
-    <div class="card">
-      <h2>1. போட்டோக்களைத் தேர்ந்தெடுக்கவும்</h2>
-      <p id="image-count">0 படங்கள் தேர்ந்தெடுக்கப்பட்டன</p>
-      <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
-      <button onclick="document.getElementById('file-input').click()">📁 கேலரி / ஃபைல்ஸ் தேர்வு செய்</button>
-    </div>
+  <!-- Main Content -->
+  <main class="flex-1 max-w-3xl w-full mx-auto px-4 py-5 space-y-5">
 
-    <div class="card">
-      <h2>2. PDF பக்க அமைப்புகள்</h2>
-      <label for="pdf-name">PDF கோப்பின் பெயர்</label>
-      <input type="text" id="pdf-name" value="My_Protected_Photos">
+    <!-- TAB 1: CREATE ENCRYPTED PDF -->
+    <section id="panelApp" class="space-y-5">
 
-      <label for="page-size">பக்க அளவு (Page Size)</label>
-      <select id="page-size">
-        <option value="a4">A4 (நிலையானது)</option>
-        <option value="letter">Letter</option>
-        <option value="fit">படத்தின் அளவுக்கேற்ப (Fit to Image)</option>
-      </select>
+      <!-- Privacy & AES-256 Badge -->
+      <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 flex items-start gap-3">
+        <svg class="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        <p class="text-xs sm:text-sm text-emerald-900 leading-relaxed">
+          <span class="font-semibold">அசல் HD தரம் &amp; AES-256 பாதுகாப்பு:</span> உங்கள் போட்டோக்கள் தரம் குறையாமல் முழு HD தெளிவில், பிரவுசருக்குள்ளேயே QPDF WebAssembly மூலம் <strong>256-bit AES</strong> என்கிரிப்ஷன் செய்யப்படும்.
+        </p>
+      </div>
 
-      <label for="orientation">திசை (Orientation)</label>
-      <select id="orientation">
-        <option value="auto">தானியங்கி (படத்திற்கு ஏற்ப)</option>
-        <option value="portrait">நெடுவாக்கு (Portrait)</option>
-        <option value="landscape">கிடைமட்டம் (Landscape)</option>
-      </select>
-    </div>
+      <!-- Step 1: Photo Picker -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center">1</span>
+            போட்டோக்களைத் தேர்ந்தெடுக்கவும்
+          </h2>
+          <span id="photoCountBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">0 படங்கள்</span>
+        </div>
 
-    <div class="card">
-      <h2>3. பாஸ்வேர்ட் & AES-256 என்கிரிப்ஷன்</h2>
-      <label for="user-password">PDF திறக்கும் பாஸ்வேர்ட் (AES-256)</label>
-      <input type="password" id="user-password" placeholder="குறைந்தது 4 எழுத்துகள்">
+        <!-- Dropzone / Action Buttons -->
+        <div id="dropZone" class="border-2 border-dashed border-slate-300 rounded-2xl p-5 text-center bg-slate-50/70 hover:border-emerald-500 transition">
+          <input id="galleryInput" type="file" accept="image/*" multiple class="hidden" />
+          <input id="cameraInput" type="file" accept="image/*" capture="environment" class="hidden" />
 
-      <label for="confirm-password">பாஸ்வேர்டை உறுதிப்படுத்துக</label>
-      <input type="password" id="confirm-password" placeholder="மீண்டும் உள்ளிடவும்">
+          <div class="flex flex-col items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <p class="text-sm text-slate-600">மொபைல் கேலரியில் இருந்து பல போட்டோக்களை ஒரே நேரத்தில் தேர்வு செய்யலாம்</p>
+            <div class="flex flex-wrap items-center justify-center gap-2.5 w-full">
+              <button id="btnPickGallery" type="button" class="tap-target flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                கேலரி / ஃபைல்ஸ்
+              </button>
+              <button id="btnOpenCamera" type="button" class="tap-target flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                கேமரா
+              </button>
+            </div>
+          </div>
+        </div>
 
-      <button id="generate-btn" style="width: 100%; background-color: var(--accent); margin-top: 1.5rem;">[AES-256 பாதுகாப்பான HD PDF உருவாக்கு]</button>
-    </div>
+        <!-- Photo List -->
+        <div id="photoListHeader" class="hidden flex items-center justify-between pt-1">
+          <p class="text-xs text-slate-500">பக்க வரிசையை மாற்ற ▲ / ▼ அல்லது சுழற்ற ↻ பொத்தான்களை அழுத்தவும்</p>
+          <button id="btnClearPhotos" type="button" class="text-xs font-semibold text-rose-600 hover:text-rose-700 px-2 py-1 rounded-lg hover:bg-rose-50 transition">
+            அனைத்தையும் நீக்கு
+          </button>
+        </div>
+        <div id="photoList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      </div>
+
+      <!-- Step 2: PDF Layout Options -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
+        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center">2</span>
+          PDF பக்க அமைப்புகள்
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label for="pdfFilename" class="block text-xs font-semibold text-slate-600 mb-1">PDF கோப்பின் பெயர்</label>
+            <div class="flex items-center">
+              <input id="pdfFilename" type="text" value="My_Protected_Photos" placeholder="கோப்பின் பெயர்" class="w-full px-3 py-2.5 rounded-l-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+              <span class="px-3 py-2.5 bg-slate-100 border border-l-0 border-slate-300 rounded-r-xl text-sm text-slate-600 font-medium">.pdf</span>
+            </div>
+          </div>
+
+          <div>
+            <label for="pageSize" class="block text-xs font-semibold text-slate-600 mb-1">பக்க அளவு (Page Size)</label>
+            <select id="pageSize" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="a4">A4 (நிலையானது)</option>
+              <option value="letter">Letter</option>
+              <option value="fit">படத்தின் அளவுக்கேற்ப (Fit to Image)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="pageOrientation" class="block text-xs font-semibold text-slate-600 mb-1">திசை (Orientation)</label>
+            <select id="pageOrientation" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="auto">தானியங்கி (படத்திற்கு ஏற்ப)</option>
+              <option value="p">நெடுவாக்கு (Portrait)</option>
+              <option value="l">கிடைமட்டம் (Landscape)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="imageQuality" class="block text-xs font-semibold text-slate-600 mb-1">படத்தின் தரம் &amp; அளவு</label>
+            <select id="imageQuality" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="hd" selected>அசல் HD தரம் (Original HD - சுருக்கமின்றி)</option>
+              <option value="0.90">உயர் தரம் (High)</option>
+              <option value="0.78">சமநிலை (Balanced)</option>
+              <option value="0.60">குறைந்த அளவு (Compact - சிறிய கோப்பு)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: AES-256 Encryption & Password -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center">3</span>
+            பாஸ்வேர்ட் &amp; AES-256 என்கிரிப்ஷன்
+          </h2>
+          <span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">AES-256</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label for="userPassword" class="block text-xs font-semibold text-slate-600 mb-1">PDF திறக்கும் பாஸ்வேர்ட் <span class="text-rose-600">*</span></label>
+            <div class="relative">
+              <input id="userPassword" type="password" placeholder="குறைந்தது 4 எழுத்துகள்" class="w-full pl-3 pr-11 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+              <button id="toggleUserPwd" type="button" aria-label="Show password" class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-slate-500 hover:text-slate-700">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+            </div>
+            <!-- Strength Meter -->
+            <div class="mt-2 space-y-1">
+              <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                <div id="pwdStrengthBar" class="h-full w-0 bg-slate-400 transition-all duration-300"></div>
+              </div>
+              <p id="pwdStrengthText" class="text-[11px] text-slate-500">வலுவான பாஸ்வேர்டை உள்ளிடவும்</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="confirmPassword" class="block text-xs font-semibold text-slate-600 mb-1">பாஸ்வேர்டை உறுதிப்படுத்துக <span class="text-rose-600">*</span></label>
+            <input id="confirmPassword" type="password" placeholder="மீண்டும் உள்ளிடவும்" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+            <p id="pwdMatchText" class="text-[11px] text-slate-500 mt-1.5"></p>
+          </div>
+        </div>
+
+        <!-- Owner Password & Permissions -->
+        <div class="pt-2 border-t border-slate-100 space-y-3">
+          <div>
+            <label for="ownerPassword" class="block text-xs font-semibold text-slate-600 mb-1">நிர்வாக பாஸ்வேர்ட் (Owner Password - விருப்பமானது)</label>
+            <input id="ownerPassword" type="password" placeholder="காலியாக விட்டால் பாதுகாப்பான குறியீடு தானாக அமைக்கப்படும்" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+
+          <div>
+            <span class="block text-xs font-semibold text-slate-600 mb-2">PDF திறந்த பிறகு அனுமதிகள் (Permissions):</span>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <label class="flex items-center gap-2 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                <input id="permPrint" type="checkbox" checked class="rounded text-emerald-700 focus:ring-emerald-500" />
+                <span>அச்சிட (Print)</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                <input id="permCopy" type="checkbox" class="rounded text-emerald-700 focus:ring-emerald-500" />
+                <span>நகலெடுக்க (Copy)</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                <input id="permModify" type="checkbox" class="rounded text-emerald-700 focus:ring-emerald-500" />
+                <span>திருத்த (Modify)</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                <input id="permAnnotate" type="checkbox" class="rounded text-emerald-700 focus:ring-emerald-500" />
+                <span>குறிப்புகள் (Notes)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generate Action & Result -->
+      <div class="space-y-3">
+        <button id="btnGeneratePdf" type="button" class="tap-target w-full py-3.5 px-5 rounded-2xl bg-emerald-700 hover:bg-emerald-800 disabled:bg-slate-400 text-white font-bold text-base shadow-md flex items-center justify-center gap-2.5 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <span id="btnGenerateLabel">AES-256 பாதுகாப்பான HD PDF உருவாக்கு</span>
+        </button>
+
+        <!-- Progress Bar -->
+        <div id="progressBox" class="hidden bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+          <div class="flex justify-between text-xs font-semibold text-slate-700">
+            <span id="progressText">PDF தயாராகிறது...</span>
+            <span id="progressPct">0%</span>
+          </div>
+          <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div id="progressBar" class="h-full bg-emerald-600 transition-all duration-200" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Success Box with Direct Download Link -->
+        <div id="resultBox" class="hidden bg-emerald-50 border border-emerald-300 rounded-2xl p-4 space-y-3 animate-fade-slide">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div class="min-w-0 flex-1">
+              <h3 class="text-sm font-bold text-emerald-950">AES-256 பாதுகாப்பான HD PDF உருவாக்கப்பட்டது!</h3>
+              <p id="resultMeta" class="text-xs text-emerald-800 mt-0.5"></p>
+            </div>
+          </div>
+          <a id="manualDownloadLink" href="#" download="protected.pdf" class="tap-target w-full py-2.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold flex items-center justify-center gap-2 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            மீண்டும் பதிவிறக்கு (Download PDF)
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TAB 2: EXTRACT PHOTOS FROM PASSWORD PDF -->
+    <section id="panelExtract" class="hidden space-y-5 animate-fade-slide">
+      <div class="bg-sky-50 border border-sky-200 rounded-2xl p-3.5 flex items-start gap-3">
+        <svg class="w-5 h-5 text-sky-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <p class="text-xs sm:text-sm text-sky-950 leading-relaxed">
+          <span class="font-semibold">பாஸ்வேர்ட் PDF → HD போட்டோக்கள்:</span> AES-256 அல்லது சாதாரண PDF கோப்பைத் தேர்ந்தெடுத்து பாஸ்வேர்டை உள்ளிடவும். ஒவ்வொரு பக்கமும் முழு HD (300 DPI) தெளிவில் JPG / PNG படங்களாகப் பிரித்தெடுக்கப்படும்.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
+        <h2 class="text-base font-bold text-slate-800">1. PDF கோப்பைத் தேர்ந்தெடுக்கவும்</h2>
+
+        <div id="extractDropZone" class="border-2 border-dashed border-slate-300 rounded-2xl p-5 text-center bg-slate-50/70 hover:border-sky-500 transition">
+          <input id="extractPdfInput" type="file" accept="application/pdf,.pdf" class="hidden" />
+          <div class="flex flex-col items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <p id="selectedPdfLabel" class="text-sm text-slate-600">பாஸ்வேர்ட் போடப்பட்ட அல்லது சாதாரண PDF கோப்பைத் தேர்வு செய்யவும்</p>
+            <button id="btnPickExtractPdf" type="button" class="tap-target px-5 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-sm font-semibold shadow-sm transition">
+              PDF கோப்பைத் தேர்ந்தெடு
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
+          <div>
+            <label for="extractPdfPassword" class="block text-xs font-semibold text-slate-600 mb-1">PDF பாஸ்வேர்ட் (இருந்தால்)</label>
+            <div class="relative">
+              <input id="extractPdfPassword" type="password" placeholder="பாஸ்வேர்டை உள்ளிடவும்" class="w-full pl-3 pr-10 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500" />
+              <button id="toggleExtractPwd" type="button" aria-label="Show extract password" class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-slate-500 hover:text-slate-700">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label for="extractFormat" class="block text-xs font-semibold text-slate-600 mb-1">படத்தின் வடிவம் (Format)</label>
+            <select id="extractFormat" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+              <option value="image/jpeg" selected>JPG (HD 98% தரம்)</option>
+              <option value="image/png">PNG (சுருக்கமற்ற முழு தரம்)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="extractScale" class="block text-xs font-semibold text-slate-600 mb-1">தெளிவுத் திறன் (Resolution)</label>
+            <select id="extractScale" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+              <option value="smart_hd" selected>அசல் HD தரம் (Smart 300 DPI)</option>
+              <option value="4.0">மிக உயர் தரம் (4x Ultra HD)</option>
+              <option value="2.0">சாதாரண தரம் (2x)</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="btnExtractPhotos" type="button" class="tap-target w-full py-3.5 px-5 rounded-2xl bg-sky-700 hover:bg-sky-800 disabled:bg-slate-400 text-white font-bold text-base shadow-md flex items-center justify-center gap-2 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+          </svg>
+          <span id="btnExtractLabel">PDF-லிருந்து HD போட்டோக்களை எடு</span>
+        </button>
+
+        <!-- Extract Progress -->
+        <div id="extractProgressBox" class="hidden bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2">
+          <div class="flex justify-between text-xs font-semibold text-slate-700">
+            <span id="extractProgressText">PDF திறக்கப்படுகிறது...</span>
+            <span id="extractProgressPct">0%</span>
+          </div>
+          <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div id="extractProgressBar" class="h-full bg-sky-600 transition-all duration-200" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Extracted Results -->
+      <div id="extractedResultsCard" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4 animate-fade-slide">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="text-base font-bold text-slate-800">பிரித்தெடுக்கப்பட்ட HD போட்டோக்கள்</h3>
+            <p id="extractedSummary" class="text-xs text-slate-500 mt-0.5"></p>
+          </div>
+          <button id="btnDownloadAllExtracted" type="button" class="tap-target px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-semibold shadow-sm transition">
+            அனைத்தையும் பதிவிறக்கு
+          </button>
+        </div>
+        <div id="extractedGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: GUIDE -->
+    <section id="panelGuide" class="hidden space-y-4 animate-fade-slide">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
+        <h2 class="text-lg font-bold text-slate-800">மொபைலில் இந்த ஆப்பைப் பயன்படுத்தும் வழிமுறைகள்</h2>
+
+        <div class="space-y-3 text-sm text-slate-700 leading-relaxed">
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+            <h3 class="font-bold text-emerald-800 mb-1">1. HD தரத்தில் AES-256 PDF உருவாக்குவது எப்படி?</h3>
+            <ol class="list-decimal list-inside space-y-1 text-xs sm:text-sm">
+              <li><strong>PDF உருவாக்கு</strong> பகுதியில் <strong>கேலரி / ஃபைல்ஸ்</strong> அல்லது <strong>கேமரா</strong> மூலம் படங்களைத் தேர்ந்தெடுக்கவும்.</li>
+              <li><strong>அசல் HD தரம் (Original HD)</strong> இயல்பாகவே தேர்ந்தெடுக்கப்பட்டிருக்கும்; இதனால் படத்தின் தெளிவுத்திறன் குறையாமல் PDF-க்குள் சேர்க்கப்படும்.</li>
+              <li>வலுவான பாஸ்வேர்டை உள்ளிட்டு <strong>AES-256 பாதுகாப்பான HD PDF உருவாக்கு</strong> பொத்தானை அழுத்தவும்.</li>
+            </ol>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+            <h3 class="font-bold text-sky-800 mb-1">2. பாஸ்வேர்ட் PDF-லிருந்து HD போட்டோக்களை எடுப்பது எப்படி?</h3>
+            <ol class="list-decimal list-inside space-y-1 text-xs sm:text-sm">
+              <li>மேலே உள்ள <strong>போட்டோ எடு</strong> பகுதிக்குச் சென்று, உங்கள் பாஸ்வேர்ட் PDF கோப்பையும் அதன் பாஸ்வேர்டையும் உள்ளிடவும்.</li>
+              <li><strong>Smart 300 DPI (HD)</strong> தரம் இயல்பாகவே அமைந்திருக்கும்; <strong>PDF-லிருந்து HD போட்டோக்களை எடு</strong> அழுத்தியதும் ஒவ்வொரு பக்கமும் தெளிவான JPG/PNG படமாகக் கிடைக்கும்.</li>
+            </ol>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+            <h3 class="font-bold text-emerald-800 mb-1">3. பாதுகாப்பு &amp; நிரந்தரத் தன்மை</h3>
+            <ul class="list-disc list-inside space-y-1 text-xs sm:text-sm">
+              <li>போட்டோக்களோ பாஸ்வேர்டோ எந்த சர்வருக்கும் அனுப்பப்படாது; அனைத்தும் உங்கள் மொபைல் பிரவுசருக்குள்ளேயே நடக்கும்.</li>
+              <li>உருவாக்கப்படும் PDF கோப்பு <strong>PDF 2.0 / 256-bit AES</strong> தரத்தில் இருப்பதால், பாஸ்வேர்டை மறக்காமல் பாதுகாப்பாகக் குறித்து வைத்துக் கொள்ளவும்.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <script>
-    // Register Service Worker for PWA cache handling
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed: ', err));
+  <footer class="text-center text-xs text-slate-400 py-4 px-4">
+    HD AES-256 பாதுகாப்பான PDF உருவாக்கி &amp; பிரித்தெடுப்பி &bull; உங்கள் தரவு உங்கள் சாதனத்திலேயே இருக்கும்
+  </footer>
+
+  <script type="module">
+    const QPDF_ESM_URL = 'https://cdn.jsdelivr.net/npm/@neslinesli93/qpdf-wasm@0.3.0/+esm';
+    const QPDF_WASM_URL = 'https://cdn.jsdelivr.net/npm/@neslinesli93/qpdf-wasm@0.3.0/dist/qpdf.wasm';
+    const PDFJS_WORKER_URL = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_URL;
+    }
+
+    const state = {
+      photos: [], // { id, name, dataUrl, width, height, rotation, sizeBytes }
+      lastBlobUrl: null,
+      extractFile: null, // { name, bytes }
+      extractedItems: [] // { pageNum, blobUrl, filename, width, height, sizeBytes }
+    };
+
+    // DOM Elements - Tabs
+    const tabBtnApp = document.getElementById('tabBtnApp');
+    const tabBtnExtract = document.getElementById('tabBtnExtract');
+    const tabBtnGuide = document.getElementById('tabBtnGuide');
+    const panelApp = document.getElementById('panelApp');
+    const panelExtract = document.getElementById('panelExtract');
+    const panelGuide = document.getElementById('panelGuide');
+
+    // DOM Elements - Create PDF
+    const galleryInput = document.getElementById('galleryInput');
+    const cameraInput = document.getElementById('cameraInput');
+    const btnPickGallery = document.getElementById('btnPickGallery');
+    const btnOpenCamera = document.getElementById('btnOpenCamera');
+    const dropZone = document.getElementById('dropZone');
+    const photoList = document.getElementById('photoList');
+    const photoListHeader = document.getElementById('photoListHeader');
+    const photoCountBadge = document.getElementById('photoCountBadge');
+    const btnClearPhotos = document.getElementById('btnClearPhotos');
+
+    const pdfFilename = document.getElementById('pdfFilename');
+    const pageSize = document.getElementById('pageSize');
+    const pageOrientation = document.getElementById('pageOrientation');
+    const imageQuality = document.getElementById('imageQuality');
+
+    const userPassword = document.getElementById('userPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const ownerPassword = document.getElementById('ownerPassword');
+    const toggleUserPwd = document.getElementById('toggleUserPwd');
+    const pwdStrengthBar = document.getElementById('pwdStrengthBar');
+    const pwdStrengthText = document.getElementById('pwdStrengthText');
+    const pwdMatchText = document.getElementById('pwdMatchText');
+
+    const permPrint = document.getElementById('permPrint');
+    const permCopy = document.getElementById('permCopy');
+    const permModify = document.getElementById('permModify');
+    const permAnnotate = document.getElementById('permAnnotate');
+
+    const btnGeneratePdf = document.getElementById('btnGeneratePdf');
+    const btnGenerateLabel = document.getElementById('btnGenerateLabel');
+    const progressBox = document.getElementById('progressBox');
+    const progressText = document.getElementById('progressText');
+    const progressPct = document.getElementById('progressPct');
+    const progressBar = document.getElementById('progressBar');
+    const resultBox = document.getElementById('resultBox');
+    const resultMeta = document.getElementById('resultMeta');
+    const manualDownloadLink = document.getElementById('manualDownloadLink');
+    const toastContainer = document.getElementById('toastContainer');
+
+    // DOM Elements - Extract Photos
+    const extractDropZone = document.getElementById('extractDropZone');
+    const extractPdfInput = document.getElementById('extractPdfInput');
+    const btnPickExtractPdf = document.getElementById('btnPickExtractPdf');
+    const selectedPdfLabel = document.getElementById('selectedPdfLabel');
+    const extractPdfPassword = document.getElementById('extractPdfPassword');
+    const toggleExtractPwd = document.getElementById('toggleExtractPwd');
+    const extractFormat = document.getElementById('extractFormat');
+    const extractScale = document.getElementById('extractScale');
+    const btnExtractPhotos = document.getElementById('btnExtractPhotos');
+    const btnExtractLabel = document.getElementById('btnExtractLabel');
+    const extractProgressBox = document.getElementById('extractProgressBox');
+    const extractProgressText = document.getElementById('extractProgressText');
+    const extractProgressPct = document.getElementById('extractProgressPct');
+    const extractProgressBar = document.getElementById('extractProgressBar');
+    const extractedResultsCard = document.getElementById('extractedResultsCard');
+    const extractedSummary = document.getElementById('extractedSummary');
+    const extractedGrid = document.getElementById('extractedGrid');
+    const btnDownloadAllExtracted = document.getElementById('btnDownloadAllExtracted');
+
+    let cachedQpdfFactory = null;
+
+    function showToast(message, type) {
+      const colors = type === 'error'
+        ? 'bg-rose-600 text-white'
+        : type === 'success'
+          ? 'bg-emerald-700 text-white'
+          : 'bg-slate-800 text-white';
+      const el = document.createElement('div');
+      el.className = `${colors} px-4 py-3 rounded-xl shadow-lg text-sm font-medium mb-2 text-center animate-fade-slide pointer-events-auto`;
+      el.textContent = message;
+      toastContainer.appendChild(el);
+      setTimeout(() => {
+        el.remove();
+      }, 3500);
+    }
+
+    const activeTabCls = 'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold bg-white text-emerald-900 transition';
+    const inactiveTabCls = 'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-emerald-100 hover:text-white transition';
+
+    function switchTab(tab) {
+      panelApp.classList.toggle('hidden', tab !== 'app');
+      panelExtract.classList.toggle('hidden', tab !== 'extract');
+      panelGuide.classList.toggle('hidden', tab !== 'guide');
+      tabBtnApp.className = tab === 'app' ? activeTabCls : inactiveTabCls;
+      tabBtnExtract.className = tab === 'extract' ? activeTabCls : inactiveTabCls;
+      tabBtnGuide.className = tab === 'guide' ? activeTabCls : inactiveTabCls;
+    }
+    tabBtnApp.addEventListener('click', () => switchTab('app'));
+    tabBtnExtract.addEventListener('click', () => switchTab('extract'));
+    tabBtnGuide.addEventListener('click', () => switchTab('guide'));
+
+    btnPickGallery.addEventListener('click', () => galleryInput.click());
+    btnOpenCamera.addEventListener('click', () => cameraInput.click());
+
+    galleryInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        handleFiles(e.target.files);
+        galleryInput.value = '';
+      }
+    });
+
+    cameraInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        handleFiles(e.target.files);
+        cameraInput.value = '';
+      }
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-emerald-500', 'bg-emerald-50/50');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-emerald-500', 'bg-emerald-50/50');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-emerald-500', 'bg-emerald-50/50');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleFiles(e.dataTransfer.files);
+      }
+    });
+
+    function readFileAsImage(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            resolve({
+              id: 'img_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+              name: file.name || 'photo.jpg',
+              dataUrl: reader.result,
+              width: img.naturalWidth,
+              height: img.naturalHeight,
+              rotation: 0,
+              sizeBytes: file.size || 0
+            });
+          };
+          img.onerror = () => reject(new Error('Invalid image: ' + file.name));
+          img.src = reader.result;
+        };
+        reader.onerror = () => reject(new Error('Read failed: ' + file.name));
+        reader.readAsDataURL(file);
       });
     }
 
-    // Simple interactivity mock for file selection counter
-    const fileInput = document.getElementById('file-input');
-    const imageCountText = document.getElementById('image-count');
+    async function handleFiles(fileList) {
+      const files = Array.from(fileList).filter((f) => f.type.startsWith('image/'));
+      if (files.length === 0) {
+        showToast('தயவுசெய்து செல்லுபடியாகும் போட்டோக்களைத் தேர்ந்தெடுக்கவும்.', 'error');
+        return;
+      }
+      let added = 0;
+      for (const file of files) {
+        try {
+          const item = await readFileAsImage(file);
+          state.photos.push(item);
+          added++;
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      renderPhotos();
+      if (added > 0) {
+        showToast(`${added} போட்டோ(க்கள்) சேர்க்கப்பட்டது`, 'success');
+      }
+    }
 
-    fileInput.addEventListener('change', (e) => {
-      const count = e.target.files.length;
-      imageCountText.textContent = `${count} படங்கள் தேர்ந்தெடுக்கப்பட்டன`;
+    function formatSize(bytes) {
+      if (!bytes) return '';
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    function renderPhotos() {
+      const count = state.photos.length;
+      photoCountBadge.textContent = `${count} படங்கள்`;
+      if (count === 0) {
+        photoListHeader.classList.add('hidden');
+        photoList.innerHTML = '';
+        return;
+      }
+      photoListHeader.classList.remove('hidden');
+      photoList.innerHTML = state.photos.map((p, idx) => {
+        const rotStyle = `transform: rotate(${p.rotation}deg);`;
+        return `
+          <div class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 bg-slate-50/80 animate-fade-slide">
+            <div class="w-16 h-16 rounded-lg bg-slate-200 overflow-hidden flex items-center justify-center shrink-0 relative">
+              <img src="${p.dataUrl}" alt="${escapeHtml(p.name)}" class="max-w-full max-h-full object-contain transition-transform duration-200" style="${rotStyle}" />
+              <span class="absolute top-1 left-1 bg-slate-900/75 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">${idx + 1}</span>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs font-semibold text-slate-800 truncate">${escapeHtml(p.name)}</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">${p.width}×${p.height} &bull; ${formatSize(p.sizeBytes)}</p>
+              <div class="flex items-center gap-1.5 mt-2">
+                <button type="button" data-action="up" data-id="${p.id}" ${idx === 0 ? 'disabled' : ''} class="px-2 py-1 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 disabled:opacity-40" title="மேலே நகர்த்து">▲</button>
+                <button type="button" data-action="down" data-id="${p.id}" ${idx === count - 1 ? 'disabled' : ''} class="px-2 py-1 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 disabled:opacity-40" title="கீழே நகர்த்து">▼</button>
+                <button type="button" data-action="rotate" data-id="${p.id}" class="px-2 py-1 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100" title="90° சுழற்று">↻</button>
+                <button type="button" data-action="remove" data-id="${p.id}" class="ml-auto px-2 py-1 rounded-lg bg-rose-50 border border-rose-200 text-xs font-bold text-rose-600 hover:bg-rose-100" title="நீக்கு">✕</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    photoList.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      const action = btn.getAttribute('data-action');
+      const id = btn.getAttribute('data-id');
+      const idx = state.photos.findIndex((p) => p.id === id);
+      if (idx === -1) return;
+
+      if (action === 'up' && idx > 0) {
+        const temp = state.photos[idx - 1];
+        state.photos[idx - 1] = state.photos[idx];
+        state.photos[idx] = temp;
+      } else if (action === 'down' && idx < state.photos.length - 1) {
+        const temp = state.photos[idx + 1];
+        state.photos[idx + 1] = state.photos[idx];
+        state.photos[idx] = temp;
+      } else if (action === 'rotate') {
+        state.photos[idx].rotation = (state.photos[idx].rotation + 90) % 360;
+      } else if (action === 'remove') {
+        state.photos.splice(idx, 1);
+      }
+      renderPhotos();
     });
+
+    btnClearPhotos.addEventListener('click', () => {
+      state.photos = [];
+      renderPhotos();
+      resultBox.classList.add('hidden');
+      showToast('அனைத்து படங்களும் நீக்கப்பட்டன', 'info');
+    });
+
+    toggleUserPwd.addEventListener('click', () => {
+      const isPwd = userPassword.type === 'password';
+      userPassword.type = isPwd ? 'text' : 'password';
+      confirmPassword.type = isPwd ? 'text' : 'password';
+    });
+
+    toggleExtractPwd.addEventListener('click', () => {
+      extractPdfPassword.type = extractPdfPassword.type === 'password' ? 'text' : 'password';
+    });
+
+    function updatePasswordFeedback() {
+      const pwd = userPassword.value;
+      const conf = confirmPassword.value;
+
+      let score = 0;
+      if (pwd.length >= 4) score++;
+      if (pwd.length >= 8) score++;
+      if (/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)) score++;
+      if (/\d/.test(pwd)) score++;
+      if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+      if (!pwd) {
+        pwdStrengthBar.style.width = '0%';
+        pwdStrengthBar.className = 'h-full bg-slate-400 transition-all duration-300';
+        pwdStrengthText.textContent = 'வலுவான பாஸ்வேர்டை உள்ளிடவும்';
+        pwdStrengthText.className = 'text-[11px] text-slate-500';
+      } else if (score <= 2) {
+        pwdStrengthBar.style.width = '35%';
+        pwdStrengthBar.className = 'h-full bg-rose-500 transition-all duration-300';
+        pwdStrengthText.textContent = 'பலவீனமான பாஸ்வேர்ட் (எண்கள்/குறியீடுகள் சேர்க்கவும்)';
+        pwdStrengthText.className = 'text-[11px] text-rose-600 font-medium';
+      } else if (score === 3) {
+        pwdStrengthBar.style.width = '68%';
+        pwdStrengthBar.className = 'h-full bg-amber-500 transition-all duration-300';
+        pwdStrengthText.textContent = 'நடுத்தர பாதுகாப்பு';
+        pwdStrengthText.className = 'text-[11px] text-amber-600 font-medium';
+      } else {
+        pwdStrengthBar.style.width = '100%';
+        pwdStrengthBar.className = 'h-full bg-emerald-600 transition-all duration-300';
+        pwdStrengthText.textContent = 'மிகவும் வலுவான பாஸ்வேர்ட்';
+        pwdStrengthText.className = 'text-[11px] text-emerald-700 font-medium';
+      }
+
+      if (!conf) {
+        pwdMatchText.textContent = '';
+      } else if (pwd === conf) {
+        pwdMatchText.textContent = '✓ பாஸ்வேர்ட் பொருந்துகிறது';
+        pwdMatchText.className = 'text-[11px] text-emerald-700 font-medium mt-1.5';
+      } else {
+        pwdMatchText.textContent = '✕ பாஸ்வேர்ட் பொருந்தவில்லை';
+        pwdMatchText.className = 'text-[11px] text-rose-600 font-medium mt-1.5';
+      }
+    }
+
+    userPassword.addEventListener('input', updatePasswordFeedback);
+    confirmPassword.addEventListener('input', updatePasswordFeedback);
+
+    function processImageForPdf(photo, qualityMode) {
+      return new Promise((resolve, reject) => {
+        const isHd = qualityMode === 'hd';
+        const jpegQuality = isHd ? 0.98 : (parseFloat(qualityMode) || 0.90);
+        const maxDim = isHd ? 4500 : 2400;
+
+        // If HD and no rotation and already JPEG within maxDim, we can still normalize via high-res canvas
+        // to honor EXIF orientation cleanly in modern browsers.
+        const img = new Image();
+        img.onload = () => {
+          const rot = photo.rotation || 0;
+          const isRotated90 = rot === 90 || rot === 270;
+          let srcW = img.naturalWidth;
+          let srcH = img.naturalHeight;
+
+          if (srcW > maxDim || srcH > maxDim) {
+            const scale = Math.min(maxDim / srcW, maxDim / srcH);
+            srcW = Math.round(srcW * scale);
+            srcH = Math.round(srcH * scale);
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = isRotated90 ? srcH : srcW;
+          canvas.height = isRotated90 ? srcW : srcH;
+
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.save();
+          ctx.translate(canvas.width / 2, canvas.height / 2);
+          ctx.rotate((rot * Math.PI) / 180);
+          ctx.drawImage(img, -srcW / 2, -srcH / 2, srcW, srcH);
+          ctx.restore();
+
+          const jpegDataUrl = canvas.toDataURL('image/jpeg', jpegQuality);
+          resolve({
+            dataUrl: jpegDataUrl,
+            width: canvas.width,
+            height: canvas.height,
+            compression: isHd ? 'NONE' : 'FAST'
+          });
+        };
+        img.onerror = () => reject(new Error('Image processing error'));
+        img.src = photo.dataUrl;
+      });
+    }
+
+    async function getFreshQpdfInstance() {
+      if (!cachedQpdfFactory) {
+        const mod = await import(QPDF_ESM_URL);
+        cachedQpdfFactory = mod.default || mod;
+      }
+      return await cachedQpdfFactory({
+        locateFile: () => QPDF_WASM_URL,
+        noInitialRun: true
+      });
+    }
+
+    async function encryptPdfWithQpdfAes256(pdfBytes, userPwd, ownPwd, perms) {
+      const qpdf = await getFreshQpdfInstance();
+      const printArg = perms.print ? '--print=full' : '--print=none';
+      const extractArg = perms.copy ? '--extract=y' : '--extract=n';
+      const modifyArg = perms.modify ? '--modify=all' : (perms.annotate ? '--modify=annotate' : '--modify=none');
+
+      qpdf.FS.writeFile('/input.pdf', pdfBytes);
+      qpdf.callMain([
+        '/input.pdf',
+        '--encrypt', userPwd, ownPwd, '256',
+        printArg,
+        extractArg,
+        modifyArg,
+        '--',
+        '/output.pdf'
+      ]);
+      const encrypted = qpdf.FS.readFile('/output.pdf');
+      try { qpdf.FS.unlink('/input.pdf'); } catch (_) {}
+      try { qpdf.FS.unlink('/output.pdf'); } catch (_) {}
+      return new Uint8Array(encrypted);
+    }
+
+    async function decryptPdfWithQpdf(pdfBytes, password) {
+      const qpdf = await getFreshQpdfInstance();
+      qpdf.FS.writeFile('/enc.pdf', pdfBytes);
+      const args = password
+        ? ['--password=' + password, '/enc.pdf', '--decrypt', '/dec.pdf']
+        : ['/enc.pdf', '--decrypt', '/dec.pdf'];
+      qpdf.callMain(args);
+      const decrypted = qpdf.FS.readFile('/dec.pdf');
+      try { qpdf.FS.unlink('/enc.pdf'); } catch (_) {}
+      try { qpdf.FS.unlink('/dec.pdf'); } catch (_) {}
+      return new Uint8Array(decrypted);
+    }
+
+    function triggerBlobDownload(blob, filename) {
+      if (state.lastBlobUrl) {
+        URL.revokeObjectURL(state.lastBlobUrl);
+      }
+      state.lastBlobUrl = URL.createObjectURL(blob);
+      manualDownloadLink.href = state.lastBlobUrl;
+      manualDownloadLink.download = filename;
+
+      const a = document.createElement('a');
+      a.href = state.lastBlobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    btnGeneratePdf.addEventListener('click', async () => {
+      if (state.photos.length === 0) {
+        showToast('முதலில் குறைந்தது ஒரு போட்டோவையாவது சேர்க்கவும்.', 'error');
+        return;
+      }
+      const pwd = userPassword.value;
+      const conf = confirmPassword.value;
+      if (!pwd || pwd.length < 4) {
+        showToast('குறைந்தது 4 எழுத்துகள் கொண்ட பாஸ்வேர்டை உள்ளிடவும்.', 'error');
+        userPassword.focus();
+        return;
+      }
+      if (pwd !== conf) {
+        showToast('இரு பாஸ்வேர்டுகளும் பொருந்தவில்லை. சரிபார்க்கவும்.', 'error');
+        confirmPassword.focus();
+        return;
+      }
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        showToast('PDF நூலகம் ஏற்றப்படவில்லை. இணைய இணைப்பைச் சரிபார்க்கவும்.', 'error');
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const rawName = (pdfFilename.value || 'My_Protected_Photos').trim().replace(/\.pdf$/i, '');
+      const safeName = rawName.replace(/[\\/:*?"<>|]/g, '_') || 'My_Protected_Photos';
+      const finalFilename = `${safeName}.pdf`;
+
+      const ownPwd = ownerPassword.value.trim() || (pwd + '_own_' + Math.random().toString(36).slice(2, 8));
+      const qualityMode = imageQuality.value;
+      const sizeMode = pageSize.value;
+      const orientMode = pageOrientation.value;
+
+      btnGeneratePdf.disabled = true;
+      btnGenerateLabel.textContent = 'HD PDF & AES-256 உருவாக்கப்படுகிறது...';
+      progressBox.classList.remove('hidden');
+      resultBox.classList.add('hidden');
+
+      try {
+        let doc = null;
+        const total = state.photos.length;
+
+        for (let i = 0; i < total; i++) {
+          const pct = Math.round(((i + 0.5) / total) * 70);
+          progressText.textContent = `HD படம் ${i + 1} / ${total} சேர்க்கப்படுகிறது...`;
+          progressPct.textContent = `${pct}%`;
+          progressBar.style.width = `${pct}%`;
+
+          await new Promise((r) => setTimeout(r, 20));
+
+          const processed = await processImageForPdf(state.photos[i], qualityMode);
+          const imgW = processed.width;
+          const imgH = processed.height;
+
+          let pageOrient = orientMode;
+          if (pageOrient === 'auto') {
+            pageOrient = imgW >= imgH ? 'l' : 'p';
+          }
+
+          let formatOpt = sizeMode;
+          if (sizeMode === 'fit') {
+            const mmW = Math.max(50, imgW * 0.264583);
+            const mmH = Math.max(50, imgH * 0.264583);
+            formatOpt = [mmW, mmH];
+            pageOrient = mmW >= mmH ? 'l' : 'p';
+          }
+
+          if (i === 0) {
+            doc = new jsPDF({
+              orientation: pageOrient,
+              unit: 'mm',
+              format: formatOpt,
+              compress: true
+            });
+          } else {
+            doc.addPage(formatOpt, pageOrient);
+          }
+
+          const pageW = doc.internal.pageSize.getWidth();
+          const pageH = doc.internal.pageSize.getHeight();
+          const margin = sizeMode === 'fit' ? 0 : 8;
+          const availW = pageW - margin * 2;
+          const availH = pageH - margin * 2;
+
+          const ratio = Math.min(availW / imgW, availH / imgH);
+          const drawW = imgW * ratio;
+          const drawH = imgH * ratio;
+          const x = (pageW - drawW) / 2;
+          const y = (pageH - drawH) / 2;
+
+          doc.addImage(processed.dataUrl, 'JPEG', x, y, drawW, drawH, undefined, processed.compression);
+        }
+
+        progressText.textContent = 'AES-256 என்கிரிப்ஷன் இயக்கப்படுகிறது (QPDF WASM)...';
+        progressPct.textContent = '82%';
+        progressBar.style.width = '82%';
+
+        const rawPdfBytes = new Uint8Array(doc.output('arraybuffer'));
+        const encryptedBytes = await encryptPdfWithQpdfAes256(rawPdfBytes, pwd, ownPwd, {
+          print: permPrint.checked,
+          copy: permCopy.checked,
+          modify: permModify.checked,
+          annotate: permAnnotate.checked
+        });
+
+        progressText.textContent = 'பாதுகாப்பான HD PDF சேமிக்கப்படுகிறது...';
+        progressPct.textContent = '100%';
+        progressBar.style.width = '100%';
+
+        const pdfBlob = new Blob([encryptedBytes], { type: 'application/pdf' });
+        triggerBlobDownload(pdfBlob, finalFilename);
+
+        resultMeta.textContent = `${finalFilename} • ${total} பக்கங்கள் • ${formatSize(pdfBlob.size)} • HD & AES-256`;
+        resultBox.classList.remove('hidden');
+        showToast('AES-256 பாதுகாப்பான HD PDF உருவாக்கப்பட்டது!', 'success');
+      } catch (err) {
+        console.error(err);
+        showToast('AES-256 என்கிரிப்ஷனில் பிழை: ' + err.message, 'error');
+      } finally {
+        btnGeneratePdf.disabled = false;
+        btnGenerateLabel.textContent = 'AES-256 பாதுகாப்பான HD PDF உருவாக்கு';
+        setTimeout(() => {
+          progressBox.classList.add('hidden');
+        }, 800);
+      }
+    });
+
+    // --- TAB 2: EXTRACT PHOTOS LOGIC ---
+    btnPickExtractPdf.addEventListener('click', () => extractPdfInput.click());
+
+    async function loadPdfFileForExtract(file) {
+      if (!file || (!file.type.includes('pdf') && !file.name.toLowerCase().endsWith('.pdf'))) {
+        showToast('தயவுசெய்து செல்லுபடியாகும் PDF கோப்பைத் தேர்ந்தெடுக்கவும்.', 'error');
+        return;
+      }
+      const buffer = await file.arrayBuffer();
+      state.extractFile = {
+        name: file.name,
+        bytes: new Uint8Array(buffer)
+      };
+      selectedPdfLabel.textContent = `${file.name} (${formatSize(file.size)})`;
+      selectedPdfLabel.className = 'text-sm font-semibold text-sky-900';
+      showToast('PDF கோப்பு தேர்ந்தெடுக்கப்பட்டது', 'success');
+    }
+
+    extractPdfInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        loadPdfFileForExtract(e.target.files[0]);
+        extractPdfInput.value = '';
+      }
+    });
+
+    extractDropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      extractDropZone.classList.add('border-sky-500', 'bg-sky-50/50');
+    });
+    extractDropZone.addEventListener('dragleave', () => {
+      extractDropZone.classList.remove('border-sky-500', 'bg-sky-50/50');
+    });
+    extractDropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      extractDropZone.classList.remove('border-sky-500', 'bg-sky-50/50');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        loadPdfFileForExtract(e.dataTransfer.files[0]);
+      }
+    });
+
+    function clearExtractedItems() {
+      for (const item of state.extractedItems) {
+        if (item.blobUrl) URL.revokeObjectURL(item.blobUrl);
+      }
+      state.extractedItems = [];
+      extractedGrid.innerHTML = '';
+    }
+
+    btnExtractPhotos.addEventListener('click', async () => {
+      if (!state.extractFile) {
+        showToast('முதலில் ஒரு PDF கோப்பைத் தேர்ந்தெடுக்கவும்.', 'error');
+        return;
+      }
+      if (!window.pdfjsLib) {
+        showToast('PDF வாசிப்பு நூலகம் ஏற்றப்படவில்லை.', 'error');
+        return;
+      }
+
+      const pwd = extractPdfPassword.value;
+      const mime = extractFormat.value;
+      const ext = mime === 'image/png' ? 'png' : 'jpg';
+      const scaleMode = extractScale.value;
+      const baseName = state.extractFile.name.replace(/\.pdf$/i, '').replace(/[\\/:*?"<>|]/g, '_');
+
+      btnExtractPhotos.disabled = true;
+      btnExtractLabel.textContent = 'HD படங்கள் பிரித்தெடுக்கப்படுகிறது...';
+      extractProgressBox.classList.remove('hidden');
+      extractedResultsCard.classList.add('hidden');
+      clearExtractedItems();
+
+      try {
+        extractProgressText.textContent = 'PDF டிக்ரிப்ட் செய்யப்படுகிறது...';
+        extractProgressPct.textContent = '15%';
+        extractProgressBar.style.width = '15%';
+
+        let pdfBytesToRender = state.extractFile.bytes;
+        try {
+          pdfBytesToRender = await decryptPdfWithQpdf(state.extractFile.bytes, pwd);
+        } catch (qpdfErr) {
+          const msg = String(qpdfErr && qpdfErr.message ? qpdfErr.message : qpdfErr);
+          if (msg.toLowerCase().includes('password') || pwd) {
+            throw new Error('பாஸ்வேர்ட் தவறானது அல்லது PDF திறக்க முடியவில்லை.');
+          }
+        }
+
+        const loadingTask = window.pdfjsLib.getDocument({
+          data: pdfBytesToRender,
+          password: pwd || undefined
+        });
+        const pdfDoc = await loadingTask.promise;
+        const numPages = pdfDoc.numPages;
+
+        for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+          const pct = Math.round(20 + (pageNum / numPages) * 80);
+          extractProgressText.textContent = `HD பக்கம் ${pageNum} / ${numPages} படமாக மாற்றப்படுகிறது...`;
+          extractProgressPct.textContent = `${pct}%`;
+          extractProgressBar.style.width = `${pct}%`;
+
+          const page = await pdfDoc.getPage(pageNum);
+          const baseViewport = page.getViewport({ scale: 1.0 });
+          const maxBaseSide = Math.max(baseViewport.width, baseViewport.height);
+
+          let computedScale = 2.0;
+          if (scaleMode === 'smart_hd') {
+            // Target ~3400px on longest side (approx 300 DPI for A4), safely capped for mobile RAM
+            computedScale = Math.min(4.8, Math.max(1.0, 3400 / maxBaseSide));
+          } else {
+            const requested = parseFloat(scaleMode) || 2.0;
+            computedScale = Math.min(requested, 4500 / maxBaseSide);
+          }
+
+          const viewport = page.getViewport({ scale: computedScale });
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.floor(viewport.width);
+          canvas.height = Math.floor(viewport.height);
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+
+          await page.render({ canvasContext: ctx, viewport }).promise;
+
+          const blob = await new Promise((resolve) => canvas.toBlob(resolve, mime, 0.98));
+          const blobUrl = URL.createObjectURL(blob);
+          const itemFilename = `${baseName}_page_${pageNum}.${ext}`;
+
+          state.extractedItems.push({
+            pageNum,
+            blobUrl,
+            filename: itemFilename,
+            width: canvas.width,
+            height: canvas.height,
+            sizeBytes: blob.size
+          });
+        }
+
+        extractedSummary.textContent = `${numPages} பக்கங்கள் HD ${ext.toUpperCase()} படங்களாகப் பிரித்தெடுக்கப்பட்டன`;
+        extractedGrid.innerHTML = state.extractedItems.map((item) => `
+          <div class="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden flex flex-col">
+            <div class="bg-slate-200 h-44 flex items-center justify-center p-2 relative">
+              <img src="${item.blobUrl}" alt="Page ${item.pageNum}" class="max-w-full max-h-full object-contain rounded" />
+              <span class="absolute top-2 left-2 bg-slate-900/75 text-white text-[11px] font-bold px-2 py-0.5 rounded-md">பக்கம் ${item.pageNum}</span>
+            </div>
+            <div class="p-3 flex items-center justify-between gap-2 bg-white">
+              <div class="min-w-0">
+                <p class="text-xs font-semibold text-slate-800 truncate">${escapeHtml(item.filename)}</p>
+                <p class="text-[11px] text-slate-500">${item.width}×${item.height} &bull; ${formatSize(item.sizeBytes)}</p>
+              </div>
+              <a href="${item.blobUrl}" download="${escapeHtml(item.filename)}" class="px-3 py-2 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-semibold shrink-0 transition">
+                சேமி
+              </a>
+            </div>
+          </div>
+        `).join('');
+
+        extractedResultsCard.classList.remove('hidden');
+        showToast(`${numPages} HD போட்டோக்கள் பிரித்தெடுக்கப்பட்டன!`, 'success');
+      } catch (err) {
+        console.error(err);
+        const msg = err && err.name === 'PasswordException'
+          ? 'பாஸ்வேர்ட் தவறானது! சரியான பாஸ்வேர்டை உள்ளிடவும்.'
+          : (err.message || 'PDF-லிருந்து படங்களை எடுக்க முடியவில்லை.');
+        showToast(msg, 'error');
+      } finally {
+        btnExtractPhotos.disabled = false;
+        btnExtractLabel.textContent = 'PDF-லிருந்து HD போட்டோக்களை எடு';
+        setTimeout(() => {
+          extractProgressBox.classList.add('hidden');
+        }, 800);
+      }
+    });
+
+    btnDownloadAllExtracted.addEventListener('click', async () => {
+      if (state.extractedItems.length === 0) return;
+      for (const item of state.extractedItems) {
+        const a = document.createElement('a');
+        a.href = item.blobUrl;
+        a.download = item.filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        await new Promise((r) => setTimeout(r, 250));
+      }
+      showToast('அனைத்து HD படங்களும் பதிவிறக்கம் செய்யப்படுகின்றன', 'success');
+    });
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
   </script>
 </body>
 </html>
